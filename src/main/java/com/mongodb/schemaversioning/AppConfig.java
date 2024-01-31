@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -21,12 +22,10 @@ public class AppConfig {
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create(uri);
-        /*return MongoClients.create(
-    MongoClientSettings.builder().applyConnectionString(new ConnectionString(uri))
-    .applyToConnectionPoolSettings(builder ->
-        builder.maxWaitTime(10, SECONDS)
-        .maxSize(200).build()));*/
+        // return MongoClients.create(uri);
+        return MongoClients.create(
+                MongoClientSettings.builder().applyConnectionString(new ConnectionString(uri))
+                        .codecRegistry(pojoCodecRegistry()).build());
     }
 
     @Bean
@@ -34,7 +33,7 @@ public class AppConfig {
         CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
 
         return CodecRegistries.fromRegistries(
-        MongoClientSettings.getDefaultCodecRegistry(),
+                MongoClientSettings.getDefaultCodecRegistry(),
                 CodecRegistries.fromProviders(pojoCodecProvider));
     }
 }

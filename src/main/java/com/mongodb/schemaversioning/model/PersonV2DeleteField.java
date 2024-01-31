@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonV1 {
+public class PersonV2DeleteField {
     @BsonId
     private String id;
     private String firstName;
@@ -19,7 +19,7 @@ public class PersonV1 {
     private String address;
     private String city;
     private String state;
-    private String telephone;
+    private String version;
     private String cellphone;
 
 }

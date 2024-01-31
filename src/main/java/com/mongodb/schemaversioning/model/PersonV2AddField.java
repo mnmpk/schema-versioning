@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonV1 {
+public class PersonV2AddField {
     @BsonId
     private String id;
     private String firstName;
@@ -21,5 +21,6 @@ public class PersonV1 {
     private String state;
     private String telephone;
     private String cellphone;
-
+    private String version;
+    private String email;
 }

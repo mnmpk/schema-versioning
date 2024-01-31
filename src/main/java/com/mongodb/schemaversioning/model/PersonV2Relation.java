@@ -1,5 +1,7 @@
 package com.mongodb.schemaversioning.model;
 
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonId;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonV1 {
+public class PersonV2Relation {
     @BsonId
     private String id;
     private String firstName;
@@ -19,7 +21,7 @@ public class PersonV1 {
     private String address;
     private String city;
     private String state;
-    private String telephone;
-    private String cellphone;
+    private String version;
+    private List<Contact> contacts;
 
 }
