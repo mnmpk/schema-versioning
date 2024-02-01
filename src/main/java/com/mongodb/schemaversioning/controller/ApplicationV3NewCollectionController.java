@@ -126,14 +126,9 @@ public class ApplicationV3NewCollectionController {
                                 logger.info("v3 is changing:" +
                                         change.getDocumentKey().getString("_id").getValue()
                                         + ", reflect the change to v1");
-                                PersonV3 p = (PersonV3) schemaVersionHandlerService.handleVersionChange(fullDocument);
-                                PersonV1 pV1 = PersonV1.builder().id(p.getId()).firstName(p.getFirstName())
-                                        .lastName(p.getLastName()).address(p.getAddress())
-                                        .city(p.getCity()).state(p.getState())
-                                        .telephone(p.getContacts().get(0).getValue())
-                                        .cellphone(p.getContacts().get(1).getValue()).build();
+                                PersonV1 pV1 = schemaVersionHandlerService.handleVersion3Fallback(
+                                        (PersonV3) schemaVersionHandlerService.handleVersionChange(fullDocument));
                                 pV1.setByTrigger(true);
-
                                 mongoTemplate.getDb().getCollection("person", PersonV1.class).replaceOne(
                                         Filters.eq("_id", change.getDocumentKey().getString("_id").getValue()), pV1,
                                         new ReplaceOptions().upsert(true));
