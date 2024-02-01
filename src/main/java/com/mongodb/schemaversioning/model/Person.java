@@ -1,5 +1,8 @@
 package com.mongodb.schemaversioning.model;
 
-public class Person {
+import lombok.Data;
 
+@Data
+public class Person {
+    private boolean byTrigger;
 }
