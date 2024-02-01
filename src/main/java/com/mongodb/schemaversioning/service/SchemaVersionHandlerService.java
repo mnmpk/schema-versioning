@@ -76,6 +76,14 @@ public class SchemaVersionHandlerService {
                 v2.getContacts());
     }
 
+    public PersonV1 handleVersion3Fallback(PersonV3 p) {
+        return PersonV1.builder().id(p.getId()).firstName(p.getFirstName())
+                .lastName(p.getLastName()).address(p.getAddress())
+                .city(p.getCity()).state(p.getState())
+                .cellphone(p.getContacts().get(0).getValue())
+                .telephone(p.getContacts().get(1).getValue()).build();
+    }
+
     @Async
     public CompletableFuture<Void> batchConvert(List<BsonDocument> list) throws InterruptedException {
         logger.info(Thread.currentThread().getName() + " start at: " + LocalDateTime.now().toString());
@@ -96,7 +104,8 @@ public class SchemaVersionHandlerService {
         List<WriteModel<Person>> bulkOperations = new ArrayList<WriteModel<Person>>();
         for (BsonDocument doc : list) {
             bulkOperations
-                    .add(new ReplaceOneModel<>(Filters.eq("_id", doc.getString("_id")), handleVersionChange(doc),new ReplaceOptions().upsert(true)));
+                    .add(new ReplaceOneModel<>(Filters.eq("_id", doc.getString("_id")), handleVersionChange(doc),
+                            new ReplaceOptions().upsert(true)));
         }
         mongoTemplate.getCollection("personV3").withDocumentClass(Person.class).bulkWrite(bulkOperations);
         logger.info(Thread.currentThread().getName() + " Complete batch schma migrate at: "

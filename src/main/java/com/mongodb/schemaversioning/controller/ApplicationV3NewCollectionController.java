@@ -95,7 +95,7 @@ public class ApplicationV3NewCollectionController {
                             }
                             break;
                         case DELETE:
-                            logger.info("v3 is changing:" +
+                            logger.info("v1 is changing:" +
                                     change.getDocumentKey().getString("_id").getValue()
                                     + ", reflect the change to v1");
                             mongoTemplate.getDb().getCollection("personV3", PersonV3.class)
