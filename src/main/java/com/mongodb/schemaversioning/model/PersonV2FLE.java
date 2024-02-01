@@ -21,6 +21,6 @@ public class PersonV2FLE {
     private String state;
     private String telephone;
     private String cellphone;
-    private String version;
+    private int version;
 
 }

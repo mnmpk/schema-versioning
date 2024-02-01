@@ -44,7 +44,7 @@ public class ApplicationV2AddFieldController {
     @PostMapping("/person")
     public InsertOneResult create() {
         MongoCollection<PersonV2AddField> collection = mongoTemplate.getDb().getCollection("person", PersonV2AddField.class);
-        PersonV2AddField person = PersonV2AddField.builder().id("10001").version("v2").firstName("M").lastName("Ma").address("100 Forest")
+        PersonV2AddField person = PersonV2AddField.builder().id("10001").version(2).firstName("M").lastName("Ma").address("100 Forest")
                 .city("Palo Alto").state("California").telephone("400-900-4000").cellphone("600-900-0003").email("adams@mongodb.com").build();
 
         return collection.insertOne(person);
@@ -54,7 +54,7 @@ public class ApplicationV2AddFieldController {
     public @ResponseBody UpdateResult update(@PathVariable String id) {
         MongoCollection<PersonV2AddField> collection = mongoTemplate.getDb().getCollection("person", PersonV2AddField.class);
         return collection.updateOne(Filters.eq("_id", id), Updates.combine(
-            Updates.set("version", "v2"),
+            Updates.set("version", 2),
             Updates.set("telephone", "800-900-4000"),
             Updates.set("email", "adams.samuel@mongodb.com")
         ));

@@ -5,13 +5,15 @@ import org.bson.codecs.pojo.annotations.BsonId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonV1 {
+public class PersonV1 extends Person {
     @BsonId
     private String id;
     private String firstName;

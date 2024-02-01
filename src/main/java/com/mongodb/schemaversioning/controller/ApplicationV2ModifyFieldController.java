@@ -44,8 +44,8 @@ public class ApplicationV2ModifyFieldController {
     @PostMapping("/person")
     public InsertOneResult create() {
         MongoCollection<PersonV2ModifyField> collection = mongoTemplate.getDb().getCollection("person", PersonV2ModifyField.class);
-        PersonV2ModifyField person = PersonV2ModifyField.builder().id("10001").version("v2").firstName("M").lastName("Ma").address("100 Forest")
-                .city("Palo Alto").state("California")/*.telephone("400-900-4000")*/.telephoneNo(4009004000l).cellphone("600-900-0003").build();
+        PersonV2ModifyField person = PersonV2ModifyField.builder().id("10001").version(2).firstName("M").lastName("Ma").address("100 Forest")
+                .city("Palo Alto").state("California").telephone(4009004000l).mobilephone("600-900-0003").build();
 
         return collection.insertOne(person);
     }
@@ -54,9 +54,10 @@ public class ApplicationV2ModifyFieldController {
     public @ResponseBody UpdateResult update(@PathVariable String id) {
         MongoCollection<PersonV2ModifyField> collection = mongoTemplate.getDb().getCollection("person", PersonV2ModifyField.class);
         return collection.updateOne(Filters.eq("_id", id), Updates.combine(
-            Updates.set("version", "v2"),
+            Updates.set("version", 2),
             //Updates.set("telephone", "800-900-4000"),
-            Updates.set("telephoneNo", 8009004000l)
+            Updates.set("telephone", 8009004000l),
+            Updates.rename("cellphone", "mobilephone")
         ));
     }
 

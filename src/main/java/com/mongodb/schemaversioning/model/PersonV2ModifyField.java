@@ -19,8 +19,8 @@ public class PersonV2ModifyField {
     private String address;
     private String city;
     private String state;
-    private String version;
-    private Long telephoneNo;
-    private String cellphone;
+    private int version;
+    private Long telephone;
+    private String mobilephone;
 
 }

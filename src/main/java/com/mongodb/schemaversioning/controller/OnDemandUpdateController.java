@@ -3,6 +3,7 @@ package com.mongodb.schemaversioning.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.BsonDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,25 +22,37 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.schemaversioning.model.Contact;
+import com.mongodb.schemaversioning.model.Person;
 import com.mongodb.schemaversioning.model.PersonV2;
+import com.mongodb.schemaversioning.service.SchemaVersionHandlerService;
 
 @RestController
-@RequestMapping(path = "/api/v2/relation")
-public class ApplicationV2RelationController {
+@RequestMapping(path = "/api/v2")
+public class OnDemandUpdateController {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    SchemaVersionHandlerService schemaVersionHandlerService;
+
     @GetMapping("/person")
-    public List<PersonV2> list() {
-        MongoCollection<PersonV2> collection = mongoTemplate.getDb().getCollection("person", PersonV2.class);
-        return collection.find().into(new ArrayList<>());
+    public List<Person> list() {
+        MongoCollection<BsonDocument> collection = mongoTemplate.getDb().getCollection("person", BsonDocument.class);
+        return collection.find().map(doc->{
+            Person p= schemaVersionHandlerService.handleVersionChange(doc);
+            mongoTemplate.getDb().getCollection("person", Person.class).replaceOne(Filters.eq("_id", doc.getString("_id")), p);
+            return p;
+        }).into(new ArrayList<>());
     }
 
     @GetMapping("/person/{id}")
-    public @ResponseBody PersonV2 read(@PathVariable String id) {
-        MongoCollection<PersonV2> collection = mongoTemplate.getDb().getCollection("person", PersonV2.class);
-        return collection.find(Filters.eq("_id", id)).first();
+    public @ResponseBody Person read(@PathVariable String id) {
+        MongoCollection<BsonDocument> collection = mongoTemplate.getDb().getCollection("person", BsonDocument.class);
+        BsonDocument doc = collection.find(Filters.eq("_id", id)).first();
+        Person p = schemaVersionHandlerService.handleVersionChange(doc);
+        mongoTemplate.getDb().getCollection("person", Person.class).replaceOne(Filters.eq("_id", doc.getString("_id")), p);
+        return p;
     }
 
     @PostMapping("/person")

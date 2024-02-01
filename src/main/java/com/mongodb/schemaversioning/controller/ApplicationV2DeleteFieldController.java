@@ -44,7 +44,7 @@ public class ApplicationV2DeleteFieldController {
     @PostMapping("/person")
     public InsertOneResult create() {
         MongoCollection<PersonV2DeleteField> collection = mongoTemplate.getDb().getCollection("person", PersonV2DeleteField.class);
-        PersonV2DeleteField person = PersonV2DeleteField.builder().id("10001").version("v2").firstName("M").lastName("Ma").address("100 Forest")
+        PersonV2DeleteField person = PersonV2DeleteField.builder().id("10001").version(2).firstName("M").lastName("Ma").address("100 Forest")
                 .city("Palo Alto").state("California")/*.telephone("400-900-4000")*/.build();
 
         return collection.insertOne(person);
@@ -54,7 +54,7 @@ public class ApplicationV2DeleteFieldController {
     public @ResponseBody UpdateResult update(@PathVariable String id) {
         MongoCollection<PersonV2DeleteField> collection = mongoTemplate.getDb().getCollection("person", PersonV2DeleteField.class);
         return collection.updateOne(Filters.eq("_id", id), Updates.combine(
-            Updates.set("version", "v2")
+            Updates.set("version", 2)
             //Updates.set("telephone", "800-900-4000")
         ));
     }

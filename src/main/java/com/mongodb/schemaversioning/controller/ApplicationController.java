@@ -18,6 +18,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.schemaversioning.model.PersonV1;
@@ -28,6 +29,18 @@ public class ApplicationController {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @GetMapping("/person/init")
+    public InsertManyResult init() {
+        MongoCollection<PersonV1> collection = mongoTemplate.getDb().getCollection("person", PersonV1.class);
+        collection.deleteMany(Filters.empty());
+        List<PersonV1> list = new ArrayList<>();
+        for(int i =10000; i<20000;i++){
+            list.add(PersonV1.builder().id(String.valueOf(i)).firstName("M").lastName("Ma").address("100 Forest")
+            .city("Palo Alto").state("California").telephone("400-900-4000").cellphone("600-900-0003").build());
+        }
+        return collection.insertMany(list);
+    }
 
     @GetMapping("/person")
     public List<PersonV1> list() {

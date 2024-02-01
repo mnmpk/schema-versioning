@@ -19,7 +19,7 @@ public class PersonV2DeleteField {
     private String address;
     private String city;
     private String state;
-    private String version;
+    private int version;
     private String cellphone;
 
 }
