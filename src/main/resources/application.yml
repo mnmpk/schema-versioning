@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: "mongodb+srv://admin:admin@demo.uskpz.mongodb.net/schema"
+      uri: "mongodb+srv://xxx:xxx@demo.uskpz.mongodb.net/schema"
       host: localhost
       port: 27017
       database: schema
