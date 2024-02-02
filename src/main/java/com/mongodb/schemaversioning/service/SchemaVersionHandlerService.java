@@ -37,11 +37,8 @@ public class SchemaVersionHandlerService {
     private CodecRegistry codecRegistry;
 
     public Person handleVersionChange(BsonDocument doc) {
-        int docVersion = 1;
-        if (doc.containsKey("version"))
-            docVersion = doc.getNumber("version").intValue();
-        Person p = convert(docVersion, doc);
-        switch (docVersion) {
+        Person p = convert(doc);
+        switch (getVersion(doc)) {
             case 1:
                 p = handleVersion1((PersonV1) p);
             case 2:
@@ -50,9 +47,15 @@ public class SchemaVersionHandlerService {
         return p;
     }
 
-    private Person convert(int docVersion, BsonDocument doc) {
+    public int getVersion(BsonDocument doc) {
+        int docVersion = 1;
+        if (doc.containsKey("version"))
+            docVersion = doc.getNumber("version").intValue();
+        return docVersion;
+    }
+    public Person convert(BsonDocument doc) {
         Class<? extends Person> clazz = PersonV1.class;
-        switch (docVersion) {
+        switch (getVersion(doc)) {
             case 2:
                 clazz = PersonV2.class;
                 break;
