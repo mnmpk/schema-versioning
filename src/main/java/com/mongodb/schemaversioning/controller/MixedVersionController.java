@@ -32,6 +32,7 @@ import com.mongodb.schemaversioning.service.SchemaVersionHandlerService;
 @RequestMapping(path = "/api/mixed")
 public class MixedVersionController {
 
+    //This flag should externalize and reload dynamically for version switch control
     private int currentVersion;
 
     @Autowired
